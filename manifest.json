@@ -1,0 +1,79 @@
+{
+    "name": "Unique-PDF-Viewer",
+    "version" : "1.0.0",
+    "manifest_version" : 2,
+
+    "description": "A PDF Viewer ",
+    "icons": {
+        "16": "img/16.png",
+        "48": "img/48.png",
+        "128": "img/128.png"
+    },
+
+    "incognito": "split",
+    
+    "background": {
+        "persistent": true,
+        "page": "upvHandler.html"
+    },
+
+    "content_scripts": [{
+        "all_frames": true,
+        "css": [
+            "css/content.css"
+        ],
+        "js": [
+            "js/content.js"
+        ],
+        "matches": [
+            "http://*/*",
+            "https://*/*",
+            "ftp://*/*",
+            "file://*/*"
+        ],
+        "run_at": "document_start"
+    }],
+
+    //"option_page": "options.html",
+
+    "page_action": {
+        "default_icon": {
+            "19": "img/19.png",
+            "38": "img/38.png"
+        },
+        "default_popup": "",
+        "default_title": ""
+    },
+/*
+    "file_browser_handlers": [
+        {
+            "default_title": "",
+            "file_fliters": [
+                "filesystem:*.pdf"
+            ],
+            "id": "open_pdf"
+        }
+    ],
+*/
+    "storage": {
+        "managed_schema": "schema.json"
+    },
+
+    "web_accessible_resources": [
+        "http:/*",
+        "https:/*",
+        "ftp:/*",
+        "file:/*",
+        "chrome-extension:/*",
+        "filesystem:/*",
+        "drive:/*"
+    ],
+
+    "permissions": [
+        "storage",
+        //"fileBrowserHandler",
+        "tabs",
+        "webRequest"
+    ]
+
+}

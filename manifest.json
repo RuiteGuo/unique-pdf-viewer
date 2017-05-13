@@ -48,15 +48,7 @@
         "managed_schema": "schema.json"
     },
 
-    "web_accessible_resources": [
-        "http:/*",
-        "https:/*",
-        "ftp:/*",
-        "file:/*",
-        "chrome-extension:/*",
-        "filesystem:/*",
-        "drive:/*"
-    ],
+    "web_accessible_resources": ["viewer.html"],
 
     "permissions": [
         "storage",

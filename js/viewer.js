@@ -8,7 +8,6 @@ var SCALE = 1.5;                      // 渲染比例
 PDFJS.workerSrc = 'lib/pdf.worker.js';
 
 
-
 function ViewerDomCreator(viewer, numberofpages){                                // 创建viewer DOM元素里的DOM结构
                                                                                  // viewer为DOM元素
   for(var i = 1; i <= numberofpages; i ++) {       
@@ -92,9 +91,30 @@ function pageRender(page) {                                 // page为PDFPagePro
 }
 
 
+chrome.runtime.onMessage.addListener(
+  function(request, sender, sendResponse) {
+
+    alert("1");
+    console.log(sender.tab ?
+                "from a content script:" + sender.tab.url :
+                "from the extension");
+  });
+
+
+
+chrome.runtime.sendMessage({greeting: "hello"}, function(response) {
+
+  for ( var item in response) {
+      if (item === "URL") {
+        PDFURL = response.URL;
+        alert(PDFURL);
+      }
+  }
+});
 
 
 var loadingTask = PDFJS.getDocument(PDFURL);                       // 主要工作流程代码
+
 loadingTask.promise.then(function(pdf) {
 
     var NumberOfPages = pdf.numPages;                              // 获得pdf页数

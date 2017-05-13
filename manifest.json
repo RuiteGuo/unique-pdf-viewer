@@ -13,7 +13,6 @@
     "incognito": "split",
     
     "background": {
-        "persistent": true,
         "page": "upvHandler.html"
     },
 
@@ -44,17 +43,7 @@
         "default_popup": "",
         "default_title": ""
     },
-/*
-    "file_browser_handlers": [
-        {
-            "default_title": "",
-            "file_fliters": [
-                "filesystem:*.pdf"
-            ],
-            "id": "open_pdf"
-        }
-    ],
-*/
+
     "storage": {
         "managed_schema": "schema.json"
     },
@@ -71,9 +60,15 @@
 
     "permissions": [
         "storage",
-        //"fileBrowserHandler",
         "tabs",
-        "webRequest"
+        "webRequest",
+        "webRequestBlocking",
+        "http://*/*.pdf",
+        "https://*/*.pdf",
+        "file:///*/*.pdf",
+        "http://*/*.PDF",
+        "https://*/*.PDF",
+        "file://*/*.PDF"
     ]
 
 }

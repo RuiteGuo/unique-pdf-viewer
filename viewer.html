@@ -3,11 +3,16 @@
 		<head>
 			<title></title>
 			<script src="lib/pdf.js"></script>
+			<link rel="stylesheet" href="css/copy.css">
 		</head>
 		<body>
-			<div id = "viewerContainer">
-				<div id = "viewer" class = "pdfviewer"></div>
-			</div>
-		</body>
+            <div id="outerContainer">
+                <div id="mainContainer">
+			        <div id = "viewerContainer" tabindex="0">
+				        <div id = "viewer" class = "pdfviewer"></div>
+			        </div>
+                </div>
+            </div>
+        </body>
 		<script src="js/viewer.js"></script>
 </html>

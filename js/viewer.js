@@ -5,7 +5,7 @@ var PDFURL = 'test_example/gfs.pdf';                      // PDF 文档url
 var SCALE = 1.5;                      // 渲染比例
 
 
-PDFJS.workerSrc = '../lib/pdf.worker.js';
+PDFJS.workerSrc = 'lib/pdf.worker.js';
 
 
 
@@ -23,6 +23,7 @@ function ViewerDomCreator(viewer, numberofpages){                               
       var textLayer = document.createElement('div');
       page.appendChild(textLayer);
       textLayer.className = "textLayer";
+      console.log(canvasWrapper.style.position.top);
 
       var canvas = document.createElement('canvas');
       canvasWrapper.appendChild(canvas);
@@ -37,6 +38,7 @@ function pageTextRender(page, canvas) {                          // 文本渲染
     var textContent = null; 
     page.getTextContent().then(function(context){               // 获得文本信息，context为TextContent对象
             textContent = context;
+            console.log(textContent);
             for (var item of textContent.items) {
                 var canvasWrapper = canvas.parentNode;
                 canvasWrapper.height = canvas.height;
@@ -54,10 +56,11 @@ function pageTextRender(page, canvas) {                          // 文本渲染
                 textLayer.appendChild(textItem);
 
                 textItem.innerHTML = item.str;
-                textItem.style.height = item.height;
+                textItem.style.fontSize = item.transform[0] * SCALE + 'px';
                 textItem.style.fontFamily = item.fontName;
-                textItem.style.left = item.transform[4] + 'px';   // item.transform 结构同下面的transform解释
-                textItem.style.top = item.transform[5] + 'px';        
+                textItem.style.width = item.width * SCALE+ 'px';
+                textItem.style.left = item.transform[4] * SCALE+ 'px';   // item.transform 结构同下面的transform解释
+                textItem.style.top = (canvas.height/SCALE - item.transform[5] - item.transform[0]) * SCALE + 'px';
             }
     }) ;
 }

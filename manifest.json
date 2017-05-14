@@ -3,7 +3,7 @@
     "version" : "1.0.0",
     "manifest_version" : 2,
 
-    "description": "A PDF Viewer ",
+    "description": "A PDF Viewer with Speed-Dependent Automatic Zooming Algorithm, which would provide better experience of Human-Machine Interaction",
     "icons": {
         "16": "img/16.png",
         "48": "img/48.png",
@@ -33,7 +33,7 @@
         "run_at": "document_start"
     }],
 
-    //"option_page": "options.html",
+    "options_page": "options.html",
 
     "page_action": {
         "default_icon": {

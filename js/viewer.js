@@ -8,7 +8,7 @@ if (window.innerHeight)
 else if ((document.body) && (document.body.clientHeight))
     winHeight = document.body.clientHeight;
 var PDFURL = 'test_example/gfs.pdf';                      // PDF 文档url
-var SCALE = 1;                      // 渲染比例
+var SCALE = 1.5;                      // 渲染比例
 var renderContext = [];
 var config = {
     scale: SCALE,
@@ -17,7 +17,13 @@ var config = {
 var tempOffset = 0, offset;
 let pageArray = [];
 let canvasArray = [];
-let imageArray = [];
+var importantInfo = [];
+let infoImageArray = [];
+var imageArray = [];
+var infoArray = [];
+var textArray = [];
+var speed = 30;
+var t1, t2;
 
 PDFJS.workerSrc = 'lib/pdf.worker.js';
 
@@ -33,13 +39,16 @@ function ViewerDomCreator(viewer, numberofpages){                               
         page.appendChild(canvasWrapper);
         canvasWrapper.className = "canvasWrapper";
 
-        var textLayer = document.createElement('div');
-        page.appendChild(textLayer);
-        textLayer.className = "textLayer";
+
 
         var canvas = document.createElement('canvas');
         canvasWrapper.appendChild(canvas);
         canvas.id = "page" + i;
+
+        var textLayer = document.createElement('div');
+        page.appendChild(textLayer);
+        textLayer.className = "textLayer";
+        textArray.push(textLayer);
     }
 }
 
@@ -51,18 +60,40 @@ function pageTextRender(page, canvas) {                          // 文本渲染
     page.getTextContent().then(function(context){               // 获得文本信息，context为TextContent对象
         textContent = context;
         console.log(textContent);
-        for (var item of textContent.items) {
-            var canvasWrapper = canvas.parentNode;
-            canvasWrapper.style.height = canvas.style.height;
-            canvasWrapper.style.width = canvas.style.width;
+        var canvasWrapper = canvas.parentNode;
+        canvasWrapper.style.height = canvas.height;
+        canvasWrapper.style.width = canvas.width;
 
-            var page = canvasWrapper.parentNode;
-            page.style.height = canvas.style.height;
-            page.style.width = canvas.style.width;
+        canvasWrapper.nextSibling.style.left = (window.innerWidth/2 - canvas.width/2 - 5) + 'px' ;
+        imageArray.push(canvasWrapper);
+
+        var page = canvasWrapper.parentNode;
+        page.style.height = canvas.height;
+        page.style.width = canvas.width;
+        console.log(canvas.width);
+
+        var imageWrapper = document.createElement('div');
+        imageWrapper.style.left = (window.innerWidth/2 - canvas.width/2 - 5) + 'px' ;
+        imageWrapper.className = 'imageWrapper';
+        infoArray.push(imageWrapper);
+        page.appendChild(imageWrapper);
+        for (var item of textContent.items) {
+
+
+            if(item.transform[0]>10) {
+                var infoObj = {
+                    page: canvas.id.split('e')[1],
+                    fontSize: item.transform[0] * SCALE + 'px',
+                    width: item.width * SCALE + 'px',
+                    left: item.transform[4] * SCALE + 'px',
+                    top: (canvas.height/SCALE - item.transform[5] - item.transform[0] - 7) * SCALE + 'px'
+                };
+                importantInfo.push(infoObj);
+            }
 
             var textLayer = canvasWrapper.nextSibling;
-            textLayer.style.height = canvas.style.height;
-            textLayer.style.width = canvas.style.width;
+            textLayer.style.height = canvas.height;
+            textLayer.style.width = canvas.width;
 
             var textItem = document.createElement('div');
             textLayer.appendChild(textItem);
@@ -72,7 +103,7 @@ function pageTextRender(page, canvas) {                          // 文本渲染
             textItem.style.fontFamily = 'sans-serif';
             textItem.style.width = item.width * SCALE+ 'px';
             textItem.style.left = item.transform[4] * SCALE+ 'px';   // item.transform 结构同下面的transform解释
-            textItem.style.top = (canvas.height/SCALE - item.transform[5] - item.transform[0] + 3) * SCALE + 'px';
+            textItem.style.top = (canvas.height/SCALE - item.transform[5] - item.transform[0] - 7) * SCALE + 'px';
         }
     }) ;
 }
@@ -101,34 +132,65 @@ function pageRender(page) {                                 // page为PDFPagePro
     );
     //console.log(tempRenderContext);
     var renderTask = page.render(tempRenderContext);
-    renderTask.then(function () {                               // renderTask属于 RenderTask 类
+
+    canvas.style.display = 'none';
+    renderTask.then(function () {
+        // var canvas = document.getElementById('page' + pageNumber);
+
+        var image = canvas.toDataURL('image/jpeg', 1);
+        var imageContainer = document.createElement('img');
+        imageContainer.style.marginTop = "-10px";
+        imageContainer.src = image;
+        canvas.parentNode.appendChild(imageContainer);
+        for(var item of importantInfo){
+            //console.log(item.page + " " + page.pageNumber);
+            if(item.page == page.pageNumber){
+                var info = document.createElement('img');
+                info.style.left = 0;
+                info.style.top = '-10px';
+                info.style.position = 'absolute';
+                // info.style.background = "transparent url("+image+") " + item.left + " " + item.top+" ";
+                info.src = image;
+                // console.log("rect(" + (parseFloat(item.top.split('p')[0]) + 8) + "px "
+                //     + (parseFloat(item.left.split('p')[0])+parseFloat(item.width.split('p')[0]) + 2) + "px "
+                //     + (parseFloat(item.top.split('p')[0]) + parseFloat(item.fontSize.split('p')[0])) + "px "
+                //     + (parseFloat(item.left.split('p')[0]) - 2) + "px" + " )");
+                info.style.clip = "rect(" + (parseFloat(item.top.split('p')[0]) + 6) + "px "
+                    + (parseFloat(item.left.split('p')[0])+parseFloat(item.width.split('p')[0])+6) + "px "
+                    + (parseFloat(item.top.split('p')[0]) + parseFloat(item.fontSize.split('p')[0]) + 12) + "px "
+                    + (parseFloat(item.left.split('p')[0]) - 26) + "px" + " )";
+
+                canvas.parentNode.nextSibling.nextSibling.appendChild(info);
+            }
+        }
+        // renderTask属于 RenderTask 类
         console.log('Page rendered');
     });
 }
 
 
-chrome.runtime.onMessage.addListener(
-    function(request, sender, sendResponse) {
+// chrome.runtime.onMessage.addListener(
+//     function(request, sender, sendResponse) {
+//
+//         alert("1");
+//         console.log(sender.tab ?
+//         "from a content script:" + sender.tab.url :
+//             "from the extension");
+//     });
+//
+//
+//
+// chrome.runtime.sendMessage({greeting: "hello"}, function(response) {
+//
+//     for ( var item in response) {
+//         if (item === "URL") {
+//             PDFURL = response.URL;
+//             init();
+//         }
+//     }
+// });
 
-        alert("1");
-        console.log(sender.tab ?
-        "from a content script:" + sender.tab.url :
-            "from the extension");
-    });
-
-
-
-chrome.runtime.sendMessage({greeting: "hello"}, function(response) {
-
-    for ( var item in response) {
-        if (item === "URL") {
-            PDFURL = response.URL;
-            init();
-        }
-    }
-});
-
-function init() {
+// function init() {
     var loadingTask = PDFJS.getDocument(PDFURL);                       // 主要工作流程代码
 
     loadingTask.promise.then(function(pdf) {
@@ -150,26 +212,36 @@ function init() {
     }, function (reason) {
         console.error(reason);
     }).then(function () {
+
         Object.defineProperty(config, 'scale', {
             set: function (value) {
                 if (SCALE != value) {
                     SCALE = value;
-                    for (let i = 0; i < pageArray.length; i++) {
-                        renderContext[i].viewport = pageArray[i].getViewport(config.scale);
-                        canvasArray[i].height = renderContext[i].viewport.height;
-                        canvasArray[i].width = renderContext[i].viewport.width;
-                        renderContext[i].canvasContext = canvasArray[i].getContext('2d');
-                        pageArray[i].render(renderContext[i]);
-                        // console.log("*****************");
+                    // for(let i = 0;i<imageArray.length;i++){
+                    //     console.log(i);
+                    //     imageArray[i].style.zIndex = (10-i) + "";
+                    // }
+                    for(var item of imageArray){
+                        item.style.transform = "scale("+SCALE+ "," + SCALE + ")";
+                        item.style.height = 816*SCALE + 'px';
+                    }
+                    for(var item1 of infoArray){
+                            item1.style.transform = "scale(" + SCALE + "," + SCALE + ")";
+                            canvas = document.getElementById("page1");
+                            item1.style.left = (window.innerWidth / 2 - canvas.width / 2 - 5 * SCALE) + 'px';
+                            // item1.style.left = 0;
+                    }
+                    for(var item2 of textArray){
+                        item2.style.display = 'none';
                     }
                 }
             },
             get: function () {
                 return SCALE;
             }
-        })
+        });
     });
-}
+// }
 
 
 //get mouse position
@@ -188,31 +260,38 @@ window.onload = function () {
     var coords = document.getElementById("outerContainer");
     coords.onmousemove = function(e) {
         var pointer_y = getCoordInDocument(e);
-        offset = winHeight/2 - pointer_y;
-        // if(offset > 50){
-        //     config.scale = 1 - Math.abs(offset/winHeight*2);
-        //     //console.log(config.scale);
-        // }
-        // else if(offset < -50){
-        //     config.scale = 1 - Math.abs(offset/winHeight*2);
-        //     //console.log(config.scale);
-        // }
-        // else {
+        var current_p = document.getElementById('viewerContainer').scrollTop;
+        console.log(current_p);
+        if(pointer_y > winHeight/2+50){
+            clearInterval(t2);
+            if(!t1)
+            t1 = setInterval(function(){var current_p = document.getElementById('viewerContainer').scrollTop;window.scrollTo(0, current_p-speed)}, 100);
+        }
+        else if(pointer_y < winHeight/2-50){
+            clearInterval(t1);
+            if(!t2)
+            t2 = setInterval(function(){var current_p = document.getElementById('viewerContainer').scrollTop;window.scrollTo(0, current_p-speed)}, 100);
+        }
+        else {
+            clearInterval(t1);
+            clearInterval(t2);
+        }
+        // offset = winHeight/2 - pointer_y;
+        //
+        // if(Math.abs(offset)<=50&&Math.abs(offset-tempOffset)>1){
         //     config.scale = 1;
         // }
-        if(Math.abs(offset)<=50&&Math.abs(offset-tempOffset)>10){
-            config.scale = 1;
-        }
-        else if(Math.abs(offset)>50&&Math.abs(offset)<=300&&Math.abs(offset-tempOffset)>10){
-            // config.scale = 1 - (Math.abs(offset)-50)/(300-50)*0.3;
-            config.scale = 0.7;
-        }
-        else if(Math.abs(offset)>300&&Math.abs(offset-tempOffset)>1){
-            // config.scale = 0.7 - (Math.abs(offset)-300)/(winHeight/2-300)*0.2;
-            config.scale = 0.5;
-        }
+        // else if(Math.abs(offset)>50&&Math.abs(offset)<=300&&Math.abs(offset-tempOffset)>1){
+        //     config.scale = 1 - (Math.abs(offset)-50)/(300-50)*0.3;
+        //     // config.scale = 0.7;
+        // }
+        // else if(Math.abs(offset)>300&&Math.abs(offset-tempOffset)>1){
+        //     config.scale = 0.7 - (Math.abs(offset)-300)/(winHeight/2-300)*0.2;
+        //     // config.scale = 0.5;
+        // }
         //console.log(pointer_y)
         tempOffset = offset;
-    }
+    };
 };
+// init();
 

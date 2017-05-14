@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title> 页面名称 </title>
+    <style type="text/css">
+        html,body {
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+<div id="a" style="width:100px;height:3000px;background:yellow;position:absolute;"></div>
+<script type="text/javascript">
+    var canvas = document.createElement('canvas');
+    var canvas_width = document.body.offsetWidth;
+    var canvas_height = document.body.offsetHeight;
+    canvas.id='homePageCanvas';
+    canvas.width = canvas_width;
+    canvas.height = canvas_height;
+    var context = canvas.getContext("2d");
+    context.arc(500,500,100,0,2*Math.PI,true);
+    context.fill();
+    document.body.style.background = "url('"+canvas.toDataURL()+"')";
+    document.body.style['background-attachment']='fixed';
+</script>
+</body>
+</html>

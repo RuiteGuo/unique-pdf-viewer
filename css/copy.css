@@ -22,6 +22,7 @@
     overflow: hidden;
     opacity: 0.2;
     line-height: 1.0;
+    z-index: 20;
 }
 
 .textLayer > div {
@@ -220,10 +221,13 @@
 .pdfViewer .canvasWrapper {
     overflow: hidden;
 }
-
-.pdfViewer .page {
+.canvasWrapper{
+    position: relative;
+    text-align: center;
+}
+.pdfViewer {
     direction: ltr;
-    width: 816px;
+    width: 100%;
     height: 1056px;
     margin: 1px auto -8px auto;
     position: relative;
@@ -232,9 +236,18 @@
     background-clip: content-box;
     border-image: url(images/shadow.png) 9 9 repeat;
     background-color: white;
+    z-index: 1;
 }
 .page{
+    height: auto;
     position: relative;
+    direction: ltr;
+    width: 100%;
+    margin: 1px auto -18px auto;
+    overflow: visible;
+    border: 9px solid transparent;
+    background-clip: content-box;
+    z-index: 3;
 }
 
 .pdfViewer.removePageBorders .page {
@@ -491,11 +504,12 @@ html[dir='rtl'] #sidebarContent {
     overflow: auto;
     -webkit-overflow-scrolling: touch;
     position: absolute;
-    top: 32px;
+    top: 0;
     right: 0;
     bottom: 0;
     left: 0;
     outline: none;
+    height: auto;
 }
 html[dir='ltr'] #viewerContainer {
     box-shadow: inset 1px 0 0 hsla(0,0%,100%,.05);
@@ -2153,7 +2167,7 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
         top: 37px;
     }
     #sidebarContent {
-        top: 32px;
+        top: 0;
         background-color: hsla(0,0%,0%,.7);
     }
 

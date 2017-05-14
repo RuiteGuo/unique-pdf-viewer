@@ -13,7 +13,8 @@
 ### Usage
 * check whether you've enabled this extension in the **extension page** or not
 * Open any valid pdf files either local ones or remote ones
-* Click on the **middle mouse button** and move your mouse back or forth, and then you'll see the amazing smooth scrolling with automatic zooming
+* ~~Click on the **middle mouse button** and move your mouse back or forth, and then you'll see the amazing smooth scrolling with automatic zooming~~(Some unknown bugs occurred,repairing...)
+* Function just for presentation, haven't add valid listeners for togglling
 
 ### Statement
 * All the codes were finished from 13 May to 14 May, developed independently.

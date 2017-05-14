@@ -22,8 +22,8 @@ let infoImageArray = [];
 var imageArray = [];
 var infoArray = [];
 var textArray = [];
-var speed = 30;
-var t1, t2;
+var speed = 2;
+var t;
 
 PDFJS.workerSrc = 'lib/pdf.worker.js';
 
@@ -260,36 +260,22 @@ window.onload = function () {
     var coords = document.getElementById("outerContainer");
     coords.onmousemove = function(e) {
         var pointer_y = getCoordInDocument(e);
-        var current_p = document.getElementById('viewerContainer').scrollTop;
-        console.log(current_p);
-        if(pointer_y > winHeight/2+50){
-            clearInterval(t2);
-            if(!t1)
-            t1 = setInterval(function(){var current_p = document.getElementById('viewerContainer').scrollTop;window.scrollTo(0, current_p-speed)}, 100);
+
+
+        offset = winHeight/2 - pointer_y;
+
+        if(Math.abs(offset)<=50&&Math.abs(offset-tempOffset)>1){
+            config.scale = 1;
         }
-        else if(pointer_y < winHeight/2-50){
-            clearInterval(t1);
-            if(!t2)
-            t2 = setInterval(function(){var current_p = document.getElementById('viewerContainer').scrollTop;window.scrollTo(0, current_p-speed)}, 100);
+        else if(Math.abs(offset)>50&&Math.abs(offset)<=300&&Math.abs(offset-tempOffset)>1){
+            config.scale = 1 - (Math.abs(offset)-50)/(300-50)*0.3;
+            // config.scale = 0.7;
         }
-        else {
-            clearInterval(t1);
-            clearInterval(t2);
+        else if(Math.abs(offset)>300&&Math.abs(offset-tempOffset)>1){
+            config.scale = 0.7 - (Math.abs(offset)-300)/(winHeight/2-300)*0.2;
+            // config.scale = 0.5;
         }
-        // offset = winHeight/2 - pointer_y;
-        //
-        // if(Math.abs(offset)<=50&&Math.abs(offset-tempOffset)>1){
-        //     config.scale = 1;
-        // }
-        // else if(Math.abs(offset)>50&&Math.abs(offset)<=300&&Math.abs(offset-tempOffset)>1){
-        //     config.scale = 1 - (Math.abs(offset)-50)/(300-50)*0.3;
-        //     // config.scale = 0.7;
-        // }
-        // else if(Math.abs(offset)>300&&Math.abs(offset-tempOffset)>1){
-        //     config.scale = 0.7 - (Math.abs(offset)-300)/(winHeight/2-300)*0.2;
-        //     // config.scale = 0.5;
-        // }
-        //console.log(pointer_y)
+        //console.log(pointer_y);
         tempOffset = offset;
     };
 };

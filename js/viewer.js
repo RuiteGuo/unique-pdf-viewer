@@ -22,7 +22,7 @@ let infoImageArray = [];
 var imageArray = [];
 var infoArray = [];
 var textArray = [];
-var speed = 2;
+var speed = 20;
 var t;
 
 PDFJS.workerSrc = 'lib/pdf.worker.js';
@@ -260,7 +260,17 @@ window.onload = function () {
     var coords = document.getElementById("outerContainer");
     coords.onmousemove = function(e) {
         var pointer_y = getCoordInDocument(e);
+        t = setInterval(function () {
+            //console.log("************")
+            var current_p = document.getElementById('viewerContainer').scrollTop;
+            if(pointer_y > winHeight/2 +50){
+                document.getElementById('viewerContainer').scrollTo(0, current_p + speed);
+            }
+            else if(pointer_y < winHeight/2-50){
+                document.getElementById('viewerContainer').scrollTo(0, current_p - speed);
 
+            }
+        }, 100);
 
         offset = winHeight/2 - pointer_y;
 
@@ -280,4 +290,6 @@ window.onload = function () {
     };
 };
 // init();
+function scroll(){
 
+}

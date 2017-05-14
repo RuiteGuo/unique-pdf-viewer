@@ -14,3 +14,12 @@
 * check whether you've enabled this extension in the **extension page** or not
 * Open any valid pdf files either local ones or remote ones
 * Click on the **middle mouse button** and move your mouse back or forth, and then you'll see the amazing smooth scrolling with automatic zooming
+
+### Statement
+* All the codes were finished from 13 May to 14 May, developed independently.
+* All APIs we've used are the chrome-extension APIs: [references](https://developer.chrome.com/extensions)
+* All open source libraries are from pdf.js from github: [references](https://github.com/mozilla/pdf.js)
+* the algorithms are from Coursera Course(Interactive Computer Graphics)Tokyo University, written by Takeo Igarishi: [references](http://www-ui.is.s.u-tokyo.ac.jp/~takeo/papers/uist2000.pdf)
+
+### License
+MIT License

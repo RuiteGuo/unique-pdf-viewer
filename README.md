@@ -1,8 +1,8 @@
 # Unique-pdf-viewer
 A PDF Viewer with Speed-Dependent Automatic Zooming Algorithm, which would provide better experience of Human-Machine Interaction
-![jpg](img/19.png)
+![jpg](img/48.png)
 ### Release
-* [unique-pdf-viewer.xcf](https://github.com/jsyishan/unique-pdf-viewer/tree/master/release/unique-pdf-viewer.xcf)
+* [unique-pdf-viewer.xcf](https://github.com/jsyishan/unique-pdf-viewer/raw/master/release/unique-pdf-viewer.crx)
 ### Install
 * install [chrome](https://www.google.com/chrome/browser/desktop/index.html)
 * open the **extension page** (chrome://extensions/)

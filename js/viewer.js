@@ -260,19 +260,21 @@ window.onload = function () {
     var coords = document.getElementById("outerContainer");
     coords.onmousemove = function(e) {
         var pointer_y = getCoordInDocument(e);
-        t = setInterval(function () {
-            //console.log("************")
-            var current_p = document.getElementById('viewerContainer').scrollTop;
-            if(pointer_y > winHeight/2 +50){
-                document.getElementById('viewerContainer').scrollTo(0, current_p + speed);
-            }
-            else if(pointer_y < winHeight/2-50){
-                document.getElementById('viewerContainer').scrollTo(0, current_p - speed);
-
-            }
-        }, 100);
 
         offset = winHeight/2 - pointer_y;
+        var current_pos;
+        if(offset > 50){
+            current_pos = document.getElementById('viewerContainer').scrollTop;
+            console.log(current_pos);
+            // window.scrollTo(0, current_pos + 300);
+            document.getElementById('viewerContainer').scrollTop =  current_pos - 10;
+        }
+        else if(offset < -50){
+            current_pos = document.getElementById('viewerContainer').scrollTop;
+            console.log(current_pos);
+            document.getElementById('viewerContainer').scrollTop =  current_pos + 10;
+        }
+
 
         if(Math.abs(offset)<=50&&Math.abs(offset-tempOffset)>1){
             config.scale = 1;
